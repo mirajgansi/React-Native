@@ -21,6 +21,9 @@ export default function Page() {
 
       <Link href="/register" style={styles.link}>
         <ThemedText> Rewgister </ThemedText></Link>
+         <Link href="/profile" style={styles.link}>
+        <ThemedText> Profile page </ThemedText></Link>
+       
     </ThemeView>
   );
 }
