@@ -1,26 +1,47 @@
-import { StyleSheet, Pressable, Text} from 'react-native'
-import React from 'react'
+import { StyleSheet, Pressable, Text, TextInput, TouchableWithoutFeedback, Keyboard} from 'react-native'
+import React, { useState } from 'react'
 import { Colors } from '../../constants/Colors' 
 import { Link } from 'expo-router'
 import ThemeView from '../../components/ThemeView'
 import ThemedText from '../../components/ThemedText'
 import Spacer from '../../components/Spacer'
 import ThemedBtn from '../../components/ThemeBtn'
+import ThemeTextInput from '../../components/ThemeTextInput'
 
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
 const handleSubmit =()=>{
-  console.log('Form submitted')
+  console.log('Form submitted', email, password)
 }
 
   return (
-    <ThemeView style={styles.container}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <ThemeView style={styles.container} safe={false}>
 
 
       <Spacer/>
-          <ThemedText style={styles.title} title ={true}>Hello World</ThemedText>
+          <ThemedText style={styles.title} title ={true}>Hello World
+          </ThemedText>
+    <ThemeTextInput 
+    style={{width: '80%', marginBottom:20}}
+        placeholder='Email' 
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
+        safe={false}  />
+
+         <ThemeTextInput 
+    style={{width: '80%', marginBottom:20}}
+        placeholder='Password' 
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        safe={false}  />
 
       <Spacer height={100} />
 
+    
   <ThemedBtn onPress={handleSubmit} >
      <Text style= {{color:'#f2f2f2'}}> LogIn</Text>
      </ThemedBtn>
@@ -28,6 +49,7 @@ const handleSubmit =()=>{
           <ThemedText> Register Instead
             </ThemedText></Link>
     </ThemeView>
+    </TouchableWithoutFeedback>
   )
 }
 
