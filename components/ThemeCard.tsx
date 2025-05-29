@@ -8,7 +8,7 @@ interface ThemeCardProps extends ViewProps {
 }
 
 const ThemeCard: React.FC<ThemeCardProps> = ({ style, children, ...props }) => {
-  const colorScheme = useColorScheme() ?? 'light';
+  const colorScheme = useColorScheme() ?? 'dark';
   const theme = Colors[colorScheme] ?? Colors.light;
 
   return (
