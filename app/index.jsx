@@ -7,7 +7,7 @@ import ThemedText from "../components/ThemedText";
 
 export default function Page() {
   return (
-    <ThemeView style={styles.container}>
+    <ThemeView style={styles.container} safe={false}>
       {/* <ThemedLogo  style={styles.img}/> */}
     <Spacer height={20} />
         <ThemedText style={styles.title} title ={true}>Hello World</ThemedText>
@@ -51,3 +51,5 @@ const styles = StyleSheet.create({
    borderBottomWidth:1 
   }
 });
+
+

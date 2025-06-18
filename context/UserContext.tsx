@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from "react";
+import { createContext, useState, ReactNode, useEffect } from "react";
 import { account } from "../lib/appwrit.";
 import { ID, Models } from "react-native-appwrite";
 
@@ -10,6 +10,8 @@ interface UserProviderProps {
 
 export function UserProvider({ children }: UserProviderProps) {
 const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
+const [authChecked, setAuthChecked]= useState(false)
+
 
 
   async function login(email: string, password: string) {
@@ -39,9 +41,23 @@ const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
      throw Error(error.message);
     }
   }
+async function getInitialUserValue(){
+  try {
+    const response = await account.get();
+    setUser(response)
+  }
+  catch (error){
+    setUser(null)
+  }finally{
+    setAuthChecked(true)
+  }
+}
+useEffect(()=>{
+  getInitialUserValue();
+}, [])
 
-  return (
-    <UserContext.Provider value={{ user, login, register, logout }}>
+  return ( 
+    <UserContext.Provider value={{ user, login, register, logout, authChecked}}>
       {children}
     </UserContext.Provider>
   );
