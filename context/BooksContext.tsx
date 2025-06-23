@@ -31,13 +31,19 @@ export function BooksProvider({children}:BooksProviderProps){
 
     }
 
-    async function fetchBooksId(id: any){
-        try{
+    async function fetchBookById(id:any) {
+    try {
+      const response = await databases.getDocument(
+        DATABASE_ID,
+        COLLECTION_ID,
+        id
+      )
 
-        } catch(error:any){
-            throw Error(error.message)
-        }
+      return response
+    } catch (error:any) {
+      console.log(error.message)
     }
+  }
 
 async function createBook(data: any) {
     try {
@@ -77,7 +83,7 @@ async function createBook(data: any) {
 
       unsubscribe = client.subscribe(channel, (response) => {
         const { payload, events } = response
-        console.log(events)
+    
 
         if (events[0].includes("create")) {
           setBooks((prevBooks) => [...prevBooks, payload as Models.Document])
@@ -99,7 +105,7 @@ async function createBook(data: any) {
 
   return (
     <BooksContext.Provider 
-      value={{ books, fetchBooks, fetchBooksId, createBook, deleteBook }}
+      value={{ books, fetchBooks, fetchBookById, createBook, deleteBook }}
     >
       {children}
     </BooksContext.Provider>
