@@ -3,6 +3,7 @@ import React from 'react'
 import { Stack } from 'expo-router'
 import { Colors } from '../constants/Colors'
 import { UserProvider } from '../context/UserContext'
+import { BooksProvider } from '../context/BooksContext'
 
 const RootLayout = () => {
       const colorScheme = useColorScheme() ?? 'light';
@@ -11,6 +12,7 @@ const RootLayout = () => {
   
   return (
     <UserProvider>
+      <BooksProvider   >
         <Stack screenOptions={{
             headerStyle:{backgroundColor : theme.navBackground},
             headerTintColor:theme.title,
@@ -20,6 +22,7 @@ const RootLayout = () => {
         <Stack.Screen name="(dashboard)" options={{headerShown: false}} />
 
         </Stack>
+        </BooksProvider>
         </UserProvider>
   )
 }

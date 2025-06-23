@@ -1,5 +1,5 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
-import { account } from "../lib/appwrit.";
+import { account } from "../lib/appwrite";
 import { ID, Models } from "react-native-appwrite";
 
 export const UserContext = createContext<any>(null); // You can replace `any` with a proper type later
