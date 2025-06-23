@@ -5,7 +5,7 @@ export function useBooks() {
   const context = useContext(BooksContext)
 
   if (!context) {
-    throw new Error("useUser must be used within a BooksProvider")
+    throw new Error("useBooks must be used within a BooksProvider")
   }
 
   return context

@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import {databases} from  "../lib/appwrite";
+import {databases, client} from  "../lib/appwrite";
 import { ID, Models, Permission, Query, Role } from "react-native-appwrite";
 import { useUser } from "../hooks/useUser";
 const DATABASE_ID= "6852e584000afbef9647"
@@ -10,7 +10,7 @@ interface BooksProviderProps{
 children: ReactNode;}
 
 export function BooksProvider({children}:BooksProviderProps){
-    const [book, setBook] =useState<Models.Document[]>([]);
+    const [books, setBooks] =useState<Models.Document[]>([]);
     const {user}=useUser()
 
     async function fetchBooks(){
@@ -19,11 +19,11 @@ export function BooksProvider({children}:BooksProviderProps){
                 DATABASE_ID,
                 COLLECTION_ID,
                 [
-                    Query.equal('userID',user.$id)
+                    Query.equal('userId',user.$id)
 
                 ]
             )
-            setBook(response.documents)
+            setBooks(response.documents)
             console.log(response)
         } catch (error: any) {
      throw Error(error.message);
@@ -68,20 +68,42 @@ async function createBook(data: any) {
     }
 
 
-useEffect(()=>{
-    if(user){    
-        fetchBooks()
-    }else{
-        setBook([])
+ useEffect(() => {
+    let unsubscribe: () => void
+    const channel = `databases.${DATABASE_ID}.collections.${COLLECTION_ID}.documents`
+
+    if (user) {
+      fetchBooks()
+
+      unsubscribe = client.subscribe(channel, (response) => {
+        const { payload, events } = response
+        console.log(events)
+
+        if (events[0].includes("create")) {
+          setBooks((prevBooks) => [...prevBooks, payload as Models.Document])
+        }
+      })
+
+    } else {
+      setBooks([])
     }
-},[user])
+
+    return () => {
+      if (unsubscribe) unsubscribe()
+    }
+
+  }, [user])
 
 
-    return (
-        <BooksContext.Provider 
-        value={{book, fetchBooks,fetchBooksId,createBook,deleteBook}}> 
-        {children}</BooksContext.Provider>
-    );
+
+
+  return (
+    <BooksContext.Provider 
+      value={{ books, fetchBooks, fetchBooksId, createBook, deleteBook }}
+    >
+      {children}
+    </BooksContext.Provider>
+  )
 }
 
 
