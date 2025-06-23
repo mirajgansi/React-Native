@@ -1,20 +1,27 @@
- import { StyleSheet } from 'react-native'
+ import { StyleProp, StyleSheet, ViewProps, ViewStyle ,Text} from 'react-native'
 import { Colors } from '../../../constants/Colors'
 import Spacer from "../../../components/Spacer"
 import ThemedText from "../../../components/ThemedText"
 import ThemedView from "../../../components/ThemeView"
 import ThemeCard from '../../../components/ThemeCard'
-import { useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
  import { useBooks } from '../../../hooks/useBooks'
 import ThemedLoader from '../../../components/ThemedLoader'
 import { Models } from 'react-native-appwrite'
+import ThemedBtn from '../../../components/ThemeBtn'
 
- const BookDetail = () => { 
+
+const BookDetail= ({ }) => {
     const [book, setBook]= useState<Models.Document | null>(null)
     const {id}= useLocalSearchParams()
-    const {fetchBookById}=useBooks()
-
+    const {fetchBookById, deleteBook}=useBooks()
+    const router= useRouter()
+    const handleDelete = async ()=>{
+        await deleteBook(id)
+        setBook(null)
+        router.replace("/books")
+    }
     useEffect (()=>{
         async function loadBook(){
             const bookData = await fetchBookById(id)
@@ -30,6 +37,8 @@ import { Models } from 'react-native-appwrite'
             </ThemedView>
         )
     }
+
+
    return (
      <ThemedView safe={true} style={styles.container}>
         <ThemeCard>
@@ -40,6 +49,12 @@ import { Models } from 'react-native-appwrite'
         <Spacer height={10}/>
         <ThemedText > {book.description}</ThemedText>
      </ThemeCard>
+
+     <ThemedBtn style={styles.delete}  onPress={handleDelete}>
+        <Text style={{color:'#fff', textAlign:'center'}}>
+            Delete 
+        </Text>
+     </ThemedBtn>
      </ThemedView>
    )
  }
@@ -57,5 +72,11 @@ import { Models } from 'react-native-appwrite'
   },
   card:{
     margin:20
+  },
+  delete:{
+    marginTop:40,
+    backgroundColor:Colors.warning,
+    width:200,
+    alignSelf:'center',
   }
  })

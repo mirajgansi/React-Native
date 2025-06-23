@@ -67,7 +67,11 @@ async function createBook(data: any) {
 
      async function deleteBook(id: any){
         try{
-
+            await databases.deleteDocument(
+                DATABASE_ID,
+            COLLECTION_ID,
+            id,
+            )
         } catch(error:any){
             throw Error(error.message)
         }
@@ -88,6 +92,11 @@ async function createBook(data: any) {
         if (events[0].includes("create")) {
           setBooks((prevBooks) => [...prevBooks, payload as Models.Document])
         }
+         if (events[0].includes("delete")) {
+      
+          setBooks((prevBooks) =>prevBooks.filter((book)=> book.$id !== (payload as Models.Document).$id))
+        }
+        
       })
 
     } else {
